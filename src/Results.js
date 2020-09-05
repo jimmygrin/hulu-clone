@@ -1,25 +1,34 @@
-import React from 'react'
-import './Results.css'
-import VideoCard from './VideoCard.js'
+import React, { useEffect, useState } from "react";
+import "./Results.css";
+import VideoCard from "./VideoCard.js";
+import axios from "./axios";
+import requests from "./requests";
+import FlipMove from "react-flip-move";
 
-function Results() {
-    return (
-        <div className='results'>
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-            <VideoCard />
-          
-        </div>
-    )
+function Results({ selectedOption }) {
+  const [movies, setmovies] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const request = await axios.get(selectedOption);
+
+      setmovies(request.data.results);
+
+      return request;
+    }
+
+    fetchData();
+  }, [selectedOption]);
+
+  return (
+    <div className="results">
+      <FlipMove>
+        {movies.map((movie) => (
+          <VideoCard key={movie.id} movie={movie} />
+        ))}
+      </FlipMove>
+    </div>
+  );
 }
 
-export default Results
+export default Results;
